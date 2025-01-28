@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: SignInPage(),
       debugShowCheckedModeBanner: false,
       routes: {
         '/sign-in': (context) => SignInPage(),

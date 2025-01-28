@@ -1,4 +1,6 @@
+import 'package:firebase/service/services.dart';
 import 'package:firebase/themes/shared.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 part 'auth/sign_in_page.dart';
