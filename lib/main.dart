@@ -1,7 +1,16 @@
 import 'package:firebase/ui/pages.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    webProvider: ReCaptchaV3Provider('DBF37596-84F7-47F0-AC8F-79387776ABF9'),
+    androidProvider: AndroidProvider.playIntegrity
+  );
+  await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
   runApp(const MyApp());
 }
 
