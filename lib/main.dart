@@ -10,7 +10,7 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
-    webProvider: ReCaptchaV3Provider('3FC6FBCB-D561-40B9-B750-C2CF193D0066'),
+    webProvider: ReCaptchaV3Provider('E7732229-8C52-43CD-8E4B-73DB0DDF8A30'),
   );
   await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
 

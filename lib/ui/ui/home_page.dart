@@ -8,7 +8,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var emailSaya = '';
+  FirebaseService _auth = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,16 @@ class _HomePageState extends State<HomePage> {
               style: welcomeTextStyle,
             ),
             Text(
-              'Email saya: $emailSaya',
+              'Email saya: ${_auth.currentUser.email}',
               style: subWelcomeTextStyle.copyWith(fontSize: 16),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text(
+                'logout',
+                style: TextStyle(color: colorWhite),
+              ),
             ),
           ],
         ),
