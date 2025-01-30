@@ -22,6 +22,7 @@ final subWelcomeBackText = ''
 
 final hintEmail = 'Email';
 final hintPassword = 'Password';
+final hintName = 'Name';
 final hintConfirmPassword = 'Confirm Password';
 final hintForgotPassword = 'Forgot Password';
 final hintSignIn = 'Sign In';
