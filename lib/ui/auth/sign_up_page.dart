@@ -47,7 +47,6 @@ class _SignUpPageState extends State<SignUpPage> {
           'first_name': firstNameController.text,
           'last_name': lastNameController.text,
           'role': selectedRole,
-          'password': passwordController.text,
         });
         Navigator.pushReplacementNamed(context, '/home');
 
