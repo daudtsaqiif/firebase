@@ -16,9 +16,20 @@ class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
+  List<String>? role;
+  String? selectedRole;
+
+  @override
+  void initState() {
+    role = ['user', 'admin'];
+    selectedRole = role![0];
+    super.initState();
+  }
 
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -33,7 +44,9 @@ class _SignUpPageState extends State<SignUpPage> {
       if (user != null) {
         await _firebaseStore.collection('users').doc(user.uid).set({
           'email': emailController.text,
-          'name': nameController.text,
+          'first_name': firstNameController.text,
+          'last_name': lastNameController.text,
+          'role': selectedRole,
           'password': passwordController.text,
         });
         Navigator.pushReplacementNamed(context, '/home');
@@ -125,24 +138,83 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        hintText: hintName,
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: TextFormField(
+                              controller: firstNameController,
+                              decoration: InputDecoration(
+                                hintText: hintFirstName,
+                                prefixIcon: Icon(Icons.person),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              keyboardType: TextInputType.name,
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'first name tidak boleh kosong';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
                         ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: TextFormField(
+                              controller: lastNameController,
+                              decoration: InputDecoration(
+                                hintText: hintLastName,
+                                prefixIcon: Icon(Icons.person_add_alt_1),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              keyboardType: TextInputType.name,
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'last name tidak boleh kosong';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.black54,
                       ),
-                      keyboardType: TextInputType.name,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'name tidak boleh kosong';
-                        }
-                        return null;
+                    ),
+                    child: DropdownButton(
+                      value: selectedRole,
+                      items: role!
+                          .map(
+                              (e) => DropdownMenuItem(child: Text(e), value: e))
+                          .toList(),
+                      onChanged: (item) {
+                        setState(() {
+                          selectedRole = item.toString();
+                        });
                       },
                     ),
                   ),
