@@ -80,7 +80,10 @@ class _NotePageState extends State<NotePage> {
                   },
                   child: Text('Cancel')),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _firebaseService.updateNote(noteId, _titleController.text,
+                      _imageUrlController.text, _contentController.text);
+                },
                 child: Text('Update Note'),
               ),
             ],
