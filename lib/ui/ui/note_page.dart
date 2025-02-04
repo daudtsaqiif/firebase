@@ -83,6 +83,7 @@ class _NotePageState extends State<NotePage> {
                 onPressed: () {
                   _firebaseService.updateNote(noteId, _titleController.text,
                       _imageUrlController.text, _contentController.text);
+                      Navigator.pop(context);
                 },
                 child: Text('Update Note'),
               ),
