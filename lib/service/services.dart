@@ -67,4 +67,18 @@ class FirebaseService {
       });
     }
   }
+
+  Stream<QuerySnapshot> getNotes() {
+    String? userId = _auth.currentUser!.uid;
+    if (userId != null) {
+      return FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection("notes")
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } else {
+      return const Stream.empty();
+    }
+  }
 }

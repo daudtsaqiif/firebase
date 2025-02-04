@@ -8,6 +8,7 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  final FirebaseService _firebaseService = FirebaseService();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -18,7 +19,7 @@ class _NotePageState extends State<NotePage> {
         _contentController.text.isEmpty) {
       return null;
     } else {
-      await FirebaseService().addNote(
+      await _firebaseService.addNote(
         _titleController.text,
         _imageUrlController.text,
         _contentController.text,
@@ -74,33 +75,74 @@ class _NotePageState extends State<NotePage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                Card(
-                  child: ListTile(
-                    title: const Text('Title'),
-                    subtitle: const Text('Content'),
-                    leading: Image.asset(
-                      'assets/images/mulogo.png',
-                      width: 50,
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.edit),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.delete),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
+            child: StreamBuilder(
+                stream: _firebaseService.getNotes(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Error fetching data'),
+                    );
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child: Text('No data found'),
+                    );
+                  } else {
+                    return ListView.builder(
+                      padding: EdgeInsets.all(10),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        var doc = snapshot.data!.docs[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(12),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                doc['imageUrl'],
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            title: Text(
+                              doc['title'],
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              doc['content'],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
           ),
         ],
       ),
