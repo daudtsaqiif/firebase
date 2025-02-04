@@ -68,6 +68,7 @@ class FirebaseService {
     }
   }
 
+//show note
   Stream<QuerySnapshot> getNotes() {
     String? userId = _auth.currentUser!.uid;
     if (userId != null) {
@@ -80,5 +81,32 @@ class FirebaseService {
     } else {
       return const Stream.empty();
     }
+  }
+
+  //delete note
+  Future<void> deleteNote(String noteId) async {
+    String? userId = _auth.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("notes")
+        .doc(noteId)
+        .delete();
+  }
+
+  //update note
+  Future<void> updateNote(
+      String noteId, String title, String imageUrl, String content) async {
+    String? userId = _auth.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("notes")
+        .doc(noteId)
+        .update({
+      "title": title,
+      "imageUrl": imageUrl,
+      "content": content,
+    });
   }
 }

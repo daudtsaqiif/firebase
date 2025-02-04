@@ -26,6 +26,12 @@ class _NotePageState extends State<NotePage> {
       );
     }
   }
+  //delete note
+  void _deleteNote(String noteId) async {
+    await _firebaseService.deleteNote(noteId);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,18 +111,18 @@ class _NotePageState extends State<NotePage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: ListTile(
-                            contentPadding: EdgeInsets.all(12),
+                            contentPadding: EdgeInsets.all(10),
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
                                 doc['imageUrl'],
-                                width: 50,
-                                height: 50,
+                                width: 75,
+                                height: 80,
                                 fit: BoxFit.cover,
                               ),
                             ),
                             title: Text(
-                              doc['title'],
+                              snapshot.data!.docs[index]['title'],
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(
@@ -133,7 +139,9 @@ class _NotePageState extends State<NotePage> {
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _deleteNote(doc.id);
+                                  },
                                 ),
                               ],
                             ),
