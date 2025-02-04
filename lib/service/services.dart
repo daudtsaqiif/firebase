@@ -49,4 +49,22 @@ class FirebaseService {
         await FirebaseFirestore.instance.collection("users").doc(userId).get();
     return userDoc.data() as Map<String, dynamic>;
   }
+
+  //add note
+  Future<void> addNote(String title, String imageUrl, String content) async {
+    String? userId = _auth.currentUser!.uid;
+    if (userId != null) {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection("notes")
+          .add({
+        "title": title,
+        "imageUrl": imageUrl,
+        "content": content,
+        "userId": userId,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+    }
+  }
 }

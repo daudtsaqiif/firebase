@@ -7,3 +7,4 @@ import 'package:flutter/material.dart';
 part 'auth/sign_in_page.dart';
 part 'auth/sign_up_page.dart';
 part 'ui/home_page.dart';
+part 'ui/note_page.dart';

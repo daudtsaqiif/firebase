@@ -61,11 +61,19 @@ class _HomePageState extends State<HomePage> {
                   style: subWelcomeTextStyle.copyWith(fontSize: 16),
                 ),
                 Text(
-                  'name: ${snapshot.data!['first_name']}',
+                  'first_name: ${snapshot.data!['first_name']}',
+                  style: subWelcomeTextStyle,
+                ),
+                Text(
+                  'last_name: ${snapshot.data!['last_name']}',
                   style: subWelcomeTextStyle,
                 ),
                 Text(
                   'uid: $userId',
+                  style: subWelcomeTextStyle,
+                ),
+                Text(
+                  'role = ${snapshot.data!['role']}',
                   style: subWelcomeTextStyle,
                 ),
                 Row(
@@ -85,7 +93,9 @@ class _HomePageState extends State<HomePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.amber,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/note');
+                      },
                       child: Text(
                         'Notes',
                         style: TextStyle(color: colorWhite),
