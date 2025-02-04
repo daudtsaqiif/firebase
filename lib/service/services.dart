@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -22,7 +23,8 @@ class FirebaseService {
 
   Future<User?> signUp(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -41,4 +43,10 @@ class FirebaseService {
   }
 
   get currentUser => _auth.currentUser;
+
+  Future<Map<String, dynamic>> getUserData(String userId) async {
+    final DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection("users").doc(userId).get();
+    return userDoc.data() as Map<String, dynamic>;
+  }
 }
