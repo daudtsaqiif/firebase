@@ -26,12 +26,67 @@ class _NotePageState extends State<NotePage> {
       );
     }
   }
+
   //delete note
   void _deleteNote(String noteId) async {
     await _firebaseService.deleteNote(noteId);
   }
 
+  //update note
+  void _updateNote(
+      String noteId, String title, String imageUrl, String content) async {
+    _titleController.text = title;
+    _imageUrlController.text = imageUrl;
+    _contentController.text = content;
 
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Update Note'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                TextFormField(
+                  controller: _imageUrlController,
+                  decoration: const InputDecoration(
+                    labelText: 'Image URL',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                TextFormField(
+                  controller: _contentController,
+                  decoration: const InputDecoration(
+                    labelText: 'Content',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 5,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel')),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Update Note'),
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +190,14 @@ class _NotePageState extends State<NotePage> {
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit, color: Colors.blue),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _updateNote(
+                                      doc.id,
+                                      doc['title'],
+                                      doc['imageUrl'],
+                                      doc['content'],
+                                    );
+                                  },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
