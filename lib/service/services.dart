@@ -117,9 +117,18 @@ class FirebaseService {
     }
     try {
       await _auth.sendPasswordResetEmail(email: email);
-      
     } catch (e) {
       throw Exception("Failed to resetting password");
     }
   }
+
+//update profile
+  Future<void> updateProfile(String firstName, String lastName) async {
+    String? userId = _auth.currentUser!.uid;
+    await FirebaseFirestore.instance.collection("users").doc(userId).update({
+      "first_name": firstName,
+      "last_name": lastName,
+    });
+  }
+
 }

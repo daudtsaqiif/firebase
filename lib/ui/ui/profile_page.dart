@@ -8,9 +8,40 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool isLoading = false;
+
   final FirebaseService _auth = FirebaseService();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+
+  @override
+  void initState() {
+    _loadProfileData();
+    super.initState();
+  }
+
+  void _loadProfileData() async {
+    User? user = _auth.currentUser;
+    String userId = user!.uid;
+    Map<String, dynamic> userData = await _auth.getUserData(userId);
+
+    _firstNameController.text = userData['first_name'];
+    _lastNameController.text = userData['last_name'];
+  }
+
+  void updateProfile() async {
+    setState(() {
+      isLoading = true;
+    });
+    String firstName = _firstNameController.text;
+    String lastName = _lastNameController.text;
+
+    await _auth.updateProfile(firstName, lastName);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +68,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Save'),
-              ),
+              isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () {
+                        updateProfile();
+                      },
+                      child: const Text('Save'),
+                    ),
             ],
           ),
         ),
