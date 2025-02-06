@@ -109,4 +109,17 @@ class FirebaseService {
       "content": content,
     });
   }
+
+  //forgot password
+  Future<void> forgotPassword(String email) async {
+    if (email.isEmpty) {
+      throw Exception("Email cannot be empty");
+    }
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      
+    } catch (e) {
+      throw Exception("Failed to resetting password");
+    }
+  }
 }

@@ -11,6 +11,7 @@ class _SignInPageState extends State<SignInPage> {
   bool isObscureText = true;
 
   TextEditingController emailController = TextEditingController();
+  TextEditingController email2Controller = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   final FirebaseService firebaseService = FirebaseService();
@@ -37,6 +38,77 @@ class _SignInPageState extends State<SignInPage> {
         );
       }
     }
+  }
+
+  void _forgotPassword() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Forgot Password',
+              style: TextStyle(fontSize: 16),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: email2Controller,
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    prefixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  String email = email2Controller.text.trim();
+                  if (email.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Email cannot be empty.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                  try {
+                    await firebaseService.forgotPassword(email);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            "Reset password link has been sent to your email."),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    email2Controller.clear();
+                    Navigator.pop(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+                child: Text('Send'),
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -129,7 +201,7 @@ class _SignInPageState extends State<SignInPage> {
               width: MediaQuery.of(context).size.width * 0.9,
               child: GestureDetector(
                 onTap: () {
-                  print(hintForgotPassword);
+                  _forgotPassword();
                 },
                 child: Text(
                   hintForgotPassword,
