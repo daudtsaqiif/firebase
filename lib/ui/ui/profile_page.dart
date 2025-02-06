@@ -8,16 +8,37 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool isLoading = false;
-
   final FirebaseService _auth = FirebaseService();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  bool isLoading = false;
+  String? profileImage;
+  File? imageFile;
 
   @override
   void initState() {
     _loadProfileData();
     super.initState();
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? _pickedimage =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
+    if (_pickedimage != null) {
+      setState(() {
+        imageFile = File(_pickedimage.path);
+      });
+    }
+  }
+
+//upload image to firebase
+  Future<void> _uploadImage(File imageFile) async {
+    setState(() {
+      isLoading = true;
+    });
+    String userId = _auth.currentUser!.uid;
   }
 
   void _loadProfileData() async {
@@ -54,6 +75,28 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Center(
           child: Column(
             children: [
+              GestureDetector(
+                onTap: () {
+                  _pickImage();
+                },
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: profileImage != null
+                          ? NetworkImage(profileImage!)
+                          : const AssetImage('assets/images/mulogo.png'),
+                    ),
+                    Positioned(
+                      child: Icon(
+                        Icons.camera_alt,
+                      ),
+                      bottom: 0,
+                      right: 0,
+                    ),
+                  ],
+                ),
+              ),
               TextField(
                 controller: _firstNameController,
                 decoration: InputDecoration(
