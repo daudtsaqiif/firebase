@@ -15,3 +15,4 @@ part 'auth/sign_up_page.dart';
 part 'ui/home_page.dart';
 part 'ui/note_page.dart';
 part 'ui/profile_page.dart';
+part 'ui/change_password_page.dart';

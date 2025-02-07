@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/sign-up': (context) => SignUpPage(),
         '/note': (context) => NotePage(),
         '/profile': (context) => ProfilePage(),
+        '/change-password': (context) => ChangePasswordPage(),
       },
     );
   }

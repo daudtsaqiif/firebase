@@ -29,12 +29,20 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     User? user = _auth.currentUser;
-    if (!user!.emailVerified) {
-      await user.sendEmailVerification();
+    if (user!.emailVerified) {
+      await user.reload();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.green,
-          content: Text('Email verification link has been sent!'),
+          content: Text('Email has been verified!'),
+        ),
+      );
+    } else {
+      await user.reload();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Please verify your email!'),
         ),
       );
     }
@@ -198,6 +206,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                       child: const Text('Send Email Verification'),
                     ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/change-password');
+                },
+                child: Text('Change Password'),
+              ),
             ],
           ),
         ),
