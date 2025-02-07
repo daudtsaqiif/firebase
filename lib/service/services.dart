@@ -131,4 +131,17 @@ class FirebaseService {
     });
   }
 
+  //upload profile
+  Future<void> uploadProfileImage(String imageURL) async {
+    String? userId = _auth.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('users').doc(userId).update({
+      'profileImage': imageURL,
+    });
+  }
+
+  Future<void> verifyEmail() async {
+    if (_auth.currentUser != null && !_auth.currentUser!.emailVerified) {
+      await _auth.currentUser!.sendEmailVerification();
+    }
+  }
 }

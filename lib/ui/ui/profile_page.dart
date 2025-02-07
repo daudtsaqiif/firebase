@@ -18,7 +18,48 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     _loadProfileData();
+    _checkEmailVerified();
     super.initState();
+  }
+
+  //cek email verified
+  void _checkEmailVerified() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    User? user = _auth.currentUser;
+    if (!user!.emailVerified) {
+      await user.sendEmailVerification();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Email verification link has been sent!'),
+        ),
+      );
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void _sendEmailVerification() async {
+    setState(() {
+      isLoading = true;
+    });
+    User? user = _auth.currentUser;
+    await user!.sendEmailVerification();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Colors.green,
+        content: Text('Email verification link has been sent!'),
+      ),
+    );
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> _pickImage() async {
@@ -31,6 +72,10 @@ class _ProfilePageState extends State<ProfilePage> {
         imageFile = File(_pickedimage.path);
       });
     }
+
+    if (imageFile != null) {
+      _uploadImage(imageFile!);
+    }
   }
 
 //upload image to firebase
@@ -38,7 +83,30 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       isLoading = true;
     });
-    String userId = _auth.currentUser!.uid;
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    Reference reference =
+        FirebaseStorage.instance.ref().child('profileImage/$userId');
+
+    UploadTask uploadTask = reference.putFile(imageFile);
+
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+
+    String imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+    await _auth.uploadProfileImage(imageUrl);
+
+    setState(() {
+      profileImage = imageUrl;
+      isLoading = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.green,
+        content: Text('Image upload successfully'),
+      ),
+    );
   }
 
   void _loadProfileData() async {
@@ -83,9 +151,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: profileImage != null
-                          ? NetworkImage(profileImage!)
-                          : const AssetImage('assets/images/mulogo.png'),
+                      backgroundImage: imageFile != null
+                          ? FileImage(imageFile!)
+                          : profileImage != null
+                              ? NetworkImage(profileImage!)
+                              : const AssetImage("assets/images/mulogo.png"),
                     ),
                     Positioned(
                       child: Icon(
@@ -103,14 +173,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   labelText: 'First Name',
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: _lastNameController,
                 decoration: InputDecoration(
                   labelText: 'Last Name',
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
@@ -118,6 +188,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         updateProfile();
                       },
                       child: const Text('Save'),
+                    ),
+              const SizedBox(height: 10),
+              (FirebaseAuth.instance.currentUser!.emailVerified)
+                  ? const Text('Email verified')
+                  : ElevatedButton(
+                      onPressed: () {
+                        _sendEmailVerification();
+                      },
+                      child: const Text('Send Email Verification'),
                     ),
             ],
           ),
