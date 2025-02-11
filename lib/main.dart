@@ -1,5 +1,4 @@
 import 'package:firebase/ui/pages.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +6,6 @@ import 'package:flutter/material.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-    appleProvider: AppleProvider.appAttest,
-    webProvider: ReCaptchaV3Provider('E7732229-8C52-43CD-8E4B-73DB0DDF8A30'),
-  );
-  await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
-
   runApp(const MyApp());
 }
 

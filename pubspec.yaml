@@ -40,7 +40,6 @@ dependencies:
   firebase_storage: ^12.4.1
   google_fonts: ^6.2.1
   supercharged: ^2.1.1
-  firebase_app_check: ^0.3.2+1
   image_picker: ^1.1.2
 
 dev_dependencies:
