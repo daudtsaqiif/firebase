@@ -7,5 +7,4 @@ class Vision {
   FaceDetector faceDetector([FaceDetectorOptions? options]) {
     return FaceDetector(options: options ?? FaceDetectorOptions());
   }
-  
 }
