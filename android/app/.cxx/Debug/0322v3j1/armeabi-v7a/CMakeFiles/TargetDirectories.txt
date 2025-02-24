@@ -1,0 +1,2 @@
+D:/vs code/IDN SENTUL/mobile_project/project_flutter/firebase/android/app/.cxx/Debug/0322v3j1/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/vs code/IDN SENTUL/mobile_project/project_flutter/firebase/android/app/.cxx/Debug/0322v3j1/armeabi-v7a/CMakeFiles/rebuild_cache.dir

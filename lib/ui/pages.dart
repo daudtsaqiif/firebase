@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,3 +15,7 @@ part 'ui/home_page.dart';
 part 'ui/note_page.dart';
 part 'ui/profile_page.dart';
 part 'ui/change_password_page.dart';
+part 'ui/attendance/home_attendance_page.dart';
+part 'ui/attendance/attendance_page.dart';
+part 'ui/attendance/leave_page.dart';
+part 'ui/attendance/history_Page.dart';

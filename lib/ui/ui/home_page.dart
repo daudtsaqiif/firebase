@@ -83,7 +83,9 @@ class _HomePageState extends State<HomePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/home-attendance');
+                      },
                       child: Text(
                         'Attedance',
                         style: TextStyle(color: colorWhite),

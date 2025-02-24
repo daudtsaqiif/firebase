@@ -1,6 +1,6 @@
 import 'package:firebase/ui/pages.dart';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -30,6 +30,10 @@ class MyApp extends StatelessWidget {
         '/note': (context) => NotePage(),
         '/profile': (context) => ProfilePage(),
         '/change-password': (context) => ChangePasswordPage(),
+        '/home-attendance': (context) => HomeAttendancePage(),
+        '/attendance': (context) => AttendancePage(),
+        '/leave': (context) => LeavePage(),
+        '/history': (context) => HistoryPage(),
       },
     );
   }
