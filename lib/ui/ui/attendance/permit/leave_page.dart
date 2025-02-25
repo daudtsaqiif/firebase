@@ -202,6 +202,20 @@ class _LeavePageState extends State<LeavePage> {
                         child: Row(
                           children: [
                             const Text('Until'),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextField(
+                                controller: fromController,
+                                onTap: () async {
+                                  DateTime? pickDateTime = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime(9999),
+                                  );
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       ),
