@@ -1,4 +1,4 @@
-part of '../../pages.dart';
+part of '../../../pages.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});

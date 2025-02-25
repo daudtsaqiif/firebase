@@ -27,5 +27,5 @@ part 'ui/change_password_page.dart';
 part 'ui/attendance/home_attendance_page.dart';
 part 'ui/attendance/attendance/attendance_page.dart';
 part 'ui/attendance/attendance/camera_page.dart';
-part 'ui/attendance/leave_page.dart';
-part 'ui/attendance/history_Page.dart';
+part 'ui/attendance/permit/leave_page.dart';
+part 'ui/attendance/history/history_Page.dart';
