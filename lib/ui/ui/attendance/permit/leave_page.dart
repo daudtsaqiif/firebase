@@ -99,6 +99,7 @@ class _LeavePageState extends State<LeavePage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                   height: 50,
@@ -121,11 +122,13 @@ class _LeavePageState extends State<LeavePage> {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
+                    enabled: false,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.text,
                     controller: controllerName,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 10),
                       labelText: "Your Name",
                       hintText: "Please enter your name",
                       hintStyle:
@@ -141,6 +144,68 @@ class _LeavePageState extends State<LeavePage> {
                         borderSide: const BorderSide(color: Colors.blueAccent),
                       ),
                     ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    'Leave Type',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Container(
+                    child: DropdownButton(
+                      value: dropValueCategories,
+                      onChanged: (value) {
+                        setState(() {
+                          dropValueCategories = value.toString();
+                        });
+                      },
+                      items: caetgoryList.map((value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      isExpanded: true,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Text('From'),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextField(
+                                controller: fromController,
+                                onTap: () async {
+                                  DateTime? pickDateTime = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime(9999),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Text('Until'),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
