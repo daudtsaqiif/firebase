@@ -28,7 +28,7 @@ class _HomeAttendancePageState extends State<HomeAttendancePage> {
               onPressed: () {
                 Navigator.pushNamed(context, '/leave');
               },
-              child: Text('Leave Request'),
+              child: Text('Leave Request')
             ),
             ElevatedButton(
               onPressed: () {

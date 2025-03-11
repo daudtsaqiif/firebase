@@ -21,12 +21,14 @@ class _AttendancePageState extends State<AttendancePage> {
   double dLat = 0.0;
   double dLong = 0.0;
   final controllerName = TextEditingController();
-  final CollectionReference dataCollection =
-      FirebaseFirestore.instance.collection('attendance');
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? "unknown";
 
   @override
   void initState() {
     super.initState();
+
+    fetchUserName();
 
     image = widget.image;
     setDateTime();
@@ -38,7 +40,44 @@ class _AttendancePageState extends State<AttendancePage> {
     }
   }
 
+  Future<void> fetchUserName() async {
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? "unknown";
+
+    if (userId == "unknown") return;
+
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        String firstName = userDoc['first_name'] ?? '';
+        String lastName = userDoc['last_name'] ?? '';
+        String fullName = '$firstName $lastName'.trim(); // Menggabungkan nama
+
+        setState(() {
+          controllerName.text = fullName; // Mengisi field dengan nama pengguna
+        });
+      }
+    } catch (e) {
+      print("Error mengambil nama pengguna: $e");
+    }
+  }
+
   Future<void> submitAbsen(String alamat, String nama, String status) async {
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? "unknown";
+    print("User ID: $userId"); // Debugging
+
+    if (userId == "unknown") {
+      print("Error: User ID not found");
+      return;
+    }
+
+    DocumentReference userDocRef = firestore.collection('users').doc(userId);
+    CollectionReference attendanceCollection =
+        userDocRef.collection('attendance');
+
     if (nama.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Nama tidak boleh kosong!"),
@@ -50,11 +89,12 @@ class _AttendancePageState extends State<AttendancePage> {
     showLoaderDialog(context);
 
     try {
-      await dataCollection.add({
+      await attendanceCollection.add({
         'address': alamat,
         'name': nama,
         'description': status,
-        'datetime': strDateTime
+        'datetime': strDateTime,
+        'createdAt': FieldValue.serverTimestamp(),
       });
 
       Navigator.of(context).pop();
@@ -71,8 +111,8 @@ class _AttendancePageState extends State<AttendancePage> {
         behavior: SnackBarBehavior.floating,
       ));
 
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const HomeAttendancePage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     } catch (e) {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -302,6 +342,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
+                    enabled: false,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.text,
                     controller: controllerName,
