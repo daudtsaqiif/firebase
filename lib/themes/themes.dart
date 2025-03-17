@@ -3,7 +3,7 @@ part of 'shared.dart';
 final colorPrimary = '1D1C36FF'.toColor();
 final colorWhite = 'FFFFFFFF'.toColor();
 
-final imageLogo = AssetImage('assets/images/mobil.jpg');
+final imageLogo = AssetImage('assets/images/idn.jpeg');
 final imageGoogle = 'assets/icons/logo_google.png';
 final imageFacebook = 'assets/icons/facebook_logo.png';
 

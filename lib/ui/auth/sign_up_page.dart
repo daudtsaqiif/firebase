@@ -26,7 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void initState() {
-    role = ['user', 'admin'];
+    role = ['student', 'teacher', 'admin'];
     selectedRole = role![0];
     super.initState();
   }
@@ -73,7 +73,8 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -110,213 +111,92 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: TextFormField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                  Row(
+                    children: [
+                      Text('Email:',
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: _buildTextField(
+                        "Email",
+                        emailController,
+                        false,
+                      )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Name:',
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: _buildTextField(
+                                "First Name", firstNameController, false)),
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email tidak boleh kosong';
-                        }
-                        if (!RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(value)) {
-                          return 'Email tidak valid';
-                        }
-                        return null;
-                      },
-                    ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: _buildTextField(
+                                "Last Name", lastNameController, false)),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: TextFormField(
-                              controller: firstNameController,
-                              decoration: InputDecoration(
-                                hintText: hintFirstName,
-                                prefixIcon: Icon(Icons.person),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              keyboardType: TextInputType.name,
-                              textInputAction: TextInputAction.next,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'first name tidak boleh kosong';
-                                }
-                                return null;
-                              },
-                            ),
+                  Row(
+                    children: [
+                      Text('Role:',
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: DropdownButton(
+                            value: selectedRole,
+                            items: role!
+                                .map((e) =>
+                                    DropdownMenuItem(child: Text(e), value: e))
+                                .toList(),
+                            onChanged: (item) {
+                              setState(() {
+                                selectedRole = item.toString();
+                              });
+                            },
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: TextFormField(
-                              controller: lastNameController,
-                              decoration: InputDecoration(
-                                hintText: hintLastName,
-                                prefixIcon: Icon(Icons.person_add_alt_1),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              keyboardType: TextInputType.name,
-                              textInputAction: TextInputAction.next,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'last name tidak boleh kosong';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.black54,
                       ),
-                    ),
-                    child: DropdownButton(
-                      value: selectedRole,
-                      items: role!
-                          .map(
-                              (e) => DropdownMenuItem(child: Text(e), value: e))
-                          .toList(),
-                      onChanged: (item) {
-                        setState(() {
-                          selectedRole = item.toString();
-                        });
-                      },
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: TextFormField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        hintText: hintPassword,
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isObscureText = !isObscureText;
-                            });
-                          },
-                          icon: isObscureText
-                              ? Icon(
-                                  Icons.visibility_off_outlined,
-                                  color: colorPrimary,
-                                )
-                              : Icon(
-                                  Icons.visibility,
-                                  color: colorPrimary,
-                                ),
-                        ),
-                      ),
-                      obscureText: isObscureText ? true : false,
-                      keyboardType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password tidak boleh kosong';
-                        }
-                        if (value.length <= 6) {
-                          return 'Password minimal 6 karakter';
-                        }
-                        return null;
-                      },
-                    ),
+                  Row(
+                    children: [
+                      Text("Password:",
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: _buildTextField(
+                            "Password", passwordController, true),
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: TextFormField(
-                      controller: confirmPasswordController,
-                      decoration: InputDecoration(
-                        hintText: hintConfirmPassword,
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isObscureText = !isObscureText;
-                            });
-                          },
-                          icon: isObscureText
-                              ? Icon(
-                                  Icons.visibility_off_outlined,
-                                  color: colorPrimary,
-                                )
-                              : Icon(
-                                  Icons.visibility,
-                                  color: colorPrimary,
-                                ),
-                        ),
-                      ),
-                      obscureText: isObscureText ? true : false,
-                      keyboardType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.done,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password tidak boleh kosong';
-                        }
-                        if (value.length <= 6) {
-                          return 'Password minimal 6 karakter';
-                        }
-                        if (value != passwordController.text) {
-                          return 'Password tidak sama';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: GestureDetector(
-                      onTap: () {
-                        print(hintForgotPassword);
-                      },
-                      child: Text(
-                        hintForgotPassword,
-                        textAlign: TextAlign.end,
-                        style: subWelcomeTextStyle,
-                      ),
-                    ),
+                  Row(
+                    children: [
+                      Text("Confrim Password:",
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: _buildTextField("Confrim Password",
+                            confirmPasswordController, true),
+                      )
+                    ],
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -330,68 +210,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               _signUp();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: colorPrimary,
+                              backgroundColor: Colors.blue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             child: Text(hintSignUp, style: hintTextStyle)),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Text(
-                      hintOtherSignUpOptions,
-                      style: subWelcomeTextStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                image: DecorationImage(
-                                  image: AssetImage(imageGoogle),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              hintGoogle,
-                              style: welcomeTextStyle.copyWith(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                image: DecorationImage(
-                                  image: AssetImage(imageFacebook),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Text(hintFacebook,
-                                style: welcomeTextStyle.copyWith(fontSize: 14)),
-                          ],
-                        ),
-                      ],
-                    ),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -417,6 +241,41 @@ class _SignUpPageState extends State<SignUpPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller,
+    bool isPassword,
+  ) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isPassword && isObscureText,
+      style: TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.black54),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  isObscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.black54,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isObscureText = !isObscureText;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }

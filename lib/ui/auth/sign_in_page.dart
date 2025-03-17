@@ -115,194 +115,151 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: imageLogo,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text(
-                welcomeBackText,
-                style: welcomeTextStyle,
-              ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text(
-                subWelcomeBackText,
-                style: subWelcomeTextStyle,
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: imageLogo,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: TextFormField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isObscureText = !isObscureText;
-                      });
-                    },
-                    icon: isObscureText
-                        ? Icon(
-                            Icons.visibility_off_outlined,
-                            color: colorPrimary,
-                          )
-                        : Icon(
-                            Icons.visibility,
-                            color: colorPrimary,
-                          ),
-                  ),
-                ),
-                obscureText: isObscureText ? true : false,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-              ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: GestureDetector(
-                onTap: () {
-                  _forgotPassword();
-                },
-                child: Text(
-                  hintForgotPassword,
-                  textAlign: TextAlign.end,
-                  style: subWelcomeTextStyle,
+              SizedBox(height: 20),
+              Text(
+                "Login to your account",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: ElevatedButton(
-                onPressed: () {
-                  _login();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(hintSignIn, style: hintTextStyle),
+              SizedBox(height: 10),
+              Text(
+                "Hello, don't forget to absent to day",
+                style: TextStyle(color: Colors.black54),
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text(
-                hintOtherSignInOptions,
-                style: subWelcomeTextStyle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              SizedBox(height: 10),
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        margin: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          image: DecorationImage(
-                            image: AssetImage(imageGoogle),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        hintGoogle,
-                        style: welcomeTextStyle.copyWith(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        margin: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          image: DecorationImage(
-                            image: AssetImage(imageFacebook),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Text(hintFacebook,
-                          style: welcomeTextStyle.copyWith(fontSize: 14)),
-                    ],
-                  ),
+                  Text("Email:",
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                  SizedBox(width: 10),
+                  Expanded(
+                      child: _buildTextField("Email", emailController, false)),
                 ],
               ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              SizedBox(height: 10),
+              Row(
                 children: [
-                  Text(
-                    hintDontHaveAccount,
+                  Text("Password:",
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child:
+                        _buildTextField("Password", passwordController, true),
+                  )
+                ],
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+                    _login();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      "Sign In",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: GestureDetector(
+                  onTap: () {
+                    _forgotPassword();
+                  },
+                  child: Text(
+                    hintForgotPassword,
+                    textAlign: TextAlign.end,
                     style: subWelcomeTextStyle,
                   ),
-                  const SizedBox(width: 5),
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/sign-up');
-                      },
-                      child: Text(hintSignUp))
-                ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      hintDontHaveAccount,
+                      style: subWelcomeTextStyle,
+                    ),
+                    const SizedBox(width: 5),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/sign-up');
+                        },
+                        child: Text(hintSignUp))
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      String label, TextEditingController controller, bool isPassword) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword && isObscureText,
+      style: TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.black54),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  isObscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.black54,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isObscureText = !isObscureText;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }
