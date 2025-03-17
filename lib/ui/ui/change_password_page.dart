@@ -106,116 +106,74 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Password'),
+        title: const Text('Change Password'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const SizedBox(height: 20),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
+              width: double.infinity,
               child: TextFormField(
                 controller: currentPasswordController,
                 decoration: InputDecoration(
-                  hintText: 'Current Password',
-                  prefixIcon: Icon(Icons.lock),
+                  hintText: 'Enter old password',
+                  prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isObscureText = !isObscureText;
-                      });
-                    },
-                    icon: isObscureText
-                        ? Icon(
-                            Icons.visibility_off_outlined,
-                            color: colorPrimary,
-                          )
-                        : Icon(
-                            Icons.visibility,
-                            color: colorPrimary,
-                          ),
-                  ),
                 ),
-                obscureText: isObscureText ? true : false,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
+                obscureText: true,
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                textInputAction: TextInputAction.next,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
+              width: double.infinity,
               child: TextFormField(
                 controller: NewPasswordController,
                 decoration: InputDecoration(
-                  hintText: 'New Password',
-                  prefixIcon: Icon(Icons.lock),
+                  hintText: 'Enter new password',
+                  prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isObscureText = !isObscureText;
-                      });
-                    },
-                    icon: isObscureText
-                        ? Icon(
-                            Icons.visibility_off_outlined,
-                            color: colorPrimary,
-                          )
-                        : Icon(
-                            Icons.visibility,
-                            color: colorPrimary,
-                          ),
+                ),
+                obscureText: true,
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                textInputAction: TextInputAction.next,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: TextFormField(
+                controller: ConfrimPasswordController,
+                decoration: InputDecoration(
+                  hintText: 'Confirm new password',
+                  prefixIcon: const Icon(Icons.lock),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                obscureText: isObscureText ? true : false,
-                keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
                 textInputAction: TextInputAction.done,
               ),
             ),
             const SizedBox(height: 20),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: TextFormField(
-                controller: ConfrimPasswordController,
-                decoration: InputDecoration(
-                  hintText: 'confrim password',
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isObscureText = !isObscureText;
-                      });
-                    },
-                    icon: isObscureText
-                        ? Icon(
-                            Icons.visibility_off_outlined,
-                            color: colorPrimary,
-                          )
-                        : Icon(
-                            Icons.visibility,
-                            color: colorPrimary,
-                          ),
-                  ),
-                ),
-                obscureText: isObscureText ? true : false,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Tambahkan logika validasi dan ubah password di sini
+                  print('Password Changed!');
+                },
+                child: const Text('Change Password'),
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: () {
-                  _changePassword();
-                },
-                child: Text('Save')),
           ],
         ),
       ),

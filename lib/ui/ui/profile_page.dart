@@ -144,79 +144,113 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _pickImage();
-                },
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: imageFile != null
-                          ? FileImage(imageFile!)
-                          : profileImage != null
-                              ? NetworkImage(profileImage!)
-                              : const AssetImage("assets/images/mulogo.png"),
-                    ),
-                    Positioned(
-                      child: Icon(
-                        Icons.camera_alt,
-                      ),
-                      bottom: 0,
-                      right: 0,
-                    ),
-                  ],
-                ),
-              ),
-              TextField(
-                controller: _firstNameController,
-                decoration: InputDecoration(
-                  labelText: 'First Name',
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _lastNameController,
-                decoration: InputDecoration(
-                  labelText: 'Last Name',
-                ),
-              ),
-              const SizedBox(height: 10),
-              isLoading
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: () {
-                        updateProfile();
-                      },
-                      child: const Text('Save'),
-                    ),
-              const SizedBox(height: 10),
-              (FirebaseAuth.instance.currentUser!.emailVerified)
-                  ? const Text('Email verified')
-                  : ElevatedButton(
-                      onPressed: () {
-                        _sendEmailVerification();
-                      },
-                      child: const Text('Send Email Verification'),
-                    ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/change-password');
-                },
-                child: Text('Change Password'),
-              ),
-            ],
-          ),
+        backgroundColor: Colors.blueAccent,
+        elevation: 0,
+        title: Text("Profile", style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('assets/avatar.png'),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "name:",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "Role: ",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text("Edit Profile",
+                      style: TextStyle(color: Colors.blueAccent)),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.all(20),
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/change-password');
+                  },
+                  child: ProfileOption(
+                    Icons.lock,
+                    "Change Password",
+                    Icons.navigate_next,
+                  ),
+                ),
+                Divider(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/change-password');
+                  },
+                  child: ProfileOption(
+                    Icons.lock_person_rounded,
+                    "Forgot Password",
+                    Icons.navigate_next,
+                  ),
+                ),
+                Divider(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/change-password');
+                  },
+                  child: ProfileOption(
+                    Icons.settings,
+                    "Settings",
+                    Icons.navigate_next,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget ProfileOption(IconData icon, String title, IconData icon2) {
+    return Container(
+        padding: EdgeInsets.all(10),
+        child: Row(children: [
+          Icon(icon, color: Colors.blueAccent, size: 20),
+          SizedBox(width: 10),
+          Text(title, style: TextStyle(fontSize: 16)),
+          Spacer(),
+          Icon(icon2, color: Colors.blueAccent, size: 30),
+        ]));
   }
 }

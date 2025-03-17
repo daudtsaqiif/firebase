@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/sign-up': (context) => SignUpPage(),
         '/note': (context) => NotePage(),
+        '/update-profile': (context) => UpdateProfilePage(),
         '/profile': (context) => ProfilePage(),
         '/change-password': (context) => ChangePasswordPage(),
         '/home-attendance': (context) => HomeAttendancePage(),
