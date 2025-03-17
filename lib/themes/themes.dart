@@ -53,3 +53,9 @@ TextStyle hintTextStyle = GoogleFonts.poppins(
   fontWeight: FontWeight.w500,
   color: Colors.white,
 );
+
+TextStyle judulTextStyle = GoogleFonts.poppins(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);

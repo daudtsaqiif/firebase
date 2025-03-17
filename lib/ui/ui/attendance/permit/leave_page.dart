@@ -301,9 +301,10 @@ class _LeavePageState extends State<LeavePage> {
         UserDocRef.collection('attendance');
 
     attendanceCollection.add({
+      'address': '',
       'name': name,
       'description': note,
-      'dateTime': '$from-$until',
+      'datetime': '$from-$until',
       'createdAt': FieldValue.serverTimestamp(),
     }).then(
       (result) {
