@@ -26,8 +26,7 @@ class _HomeAttendancePageState extends State<HomeAttendancePage> {
               children: [
                 const CircleAvatar(
                   radius: 30,
-                  backgroundImage: NetworkImage(
-                      'https://i.pravatar.cc/150?img=3'), // Ganti dengan foto user
+                  backgroundImage: AssetImage('assets/images/face.png')
                 ),
                 const SizedBox(width: 12),
                 Column(

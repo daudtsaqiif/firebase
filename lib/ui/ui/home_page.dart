@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                       const CircleAvatar(
                         radius: 30,
                         backgroundImage:
-                            NetworkImage('https://i.pravatar.cc/150?img=3'),
+                            AssetImage('assets/images/face.png'),
                       ),
                       const SizedBox(width: 12),
                       Column(

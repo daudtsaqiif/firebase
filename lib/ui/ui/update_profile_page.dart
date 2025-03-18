@@ -94,6 +94,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           },
           child: Text(
             'Edit Profile',
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
         centerTitle: true,
@@ -114,11 +117,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: imageFile != null
-                          ? FileImage(imageFile!)
-                          : profileImage != null
-                              ? NetworkImage(profileImage!) as ImageProvider
-                              : const AssetImage('assets/images/berelang.jpeg'),
+                      // backgroundImage: imageFile != null
+                      //     ? FileImage(imageFile!)
+                      //     : profileImage != null
+                      //         ? NetworkImage(profileImage!) as ImageProvider
+                      //         : const AssetImage('assets/images/face.png'),
+                      backgroundImage: AssetImage('assets/images/face.png'),
                     ),
                     Positioned(
                       bottom: 0,
@@ -132,8 +136,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     ),
                   ],
                 ),
-                Text('nama'),
-                Text('email'),
+                const SizedBox(height: 10),
+                Text(
+                  '${_auth.currentUser!.email}',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent),
+                ),
                 const SizedBox(height: 30),
                 TextFormField(
                   controller: _nameController,
@@ -169,6 +179,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ? CircularProgressIndicator(color: Colors.white)
                         : Text(
                             'Update Profile',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                   ),
                 ),
@@ -182,6 +197,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     ),
                     child: Text(
                       'Send Email Verification',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

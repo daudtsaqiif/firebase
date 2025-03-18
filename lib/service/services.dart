@@ -149,4 +149,5 @@ class FirebaseService {
   Future<void> changePassword(String newPassword) async {
     await _auth.currentUser!.updatePassword(newPassword);
   }
+
 }

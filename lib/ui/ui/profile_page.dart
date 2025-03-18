@@ -8,18 +8,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String? userId;
+  late Future<Map<String, dynamic>> userData;
   final FirebaseService _auth = FirebaseService();
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  bool isLoading = false;
-  String? profileImage;
-  File? imageFile;
 
-  @override
+  bool isLoading = false;
+
   void initState() {
-    _loadProfileData();
     _checkEmailVerified();
     super.initState();
+
+    User? user = _auth.currentUser;
+
+    userId = user!.uid;
+    userData = _auth.getUserData(userId!);
   }
 
   //cek email verified
@@ -70,172 +72,249 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? _pickedimage =
-        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
-
-    if (_pickedimage != null) {
-      setState(() {
-        imageFile = File(_pickedimage.path);
-      });
-    }
-
-    if (imageFile != null) {
-      _uploadImage(imageFile!);
-    }
-  }
-
-//upload image to firebase
-  Future<void> _uploadImage(File imageFile) async {
-    setState(() {
-      isLoading = true;
-    });
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-
-    Reference reference =
-        FirebaseStorage.instance.ref().child('profileImage/$userId');
-
-    UploadTask uploadTask = reference.putFile(imageFile);
-
-    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-
-    String imageUrl = await taskSnapshot.ref.getDownloadURL();
-
-    await _auth.uploadProfileImage(imageUrl);
-
-    setState(() {
-      profileImage = imageUrl;
-      isLoading = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('Image upload successfully'),
-      ),
-    );
-  }
-
-  void _loadProfileData() async {
-    User? user = _auth.currentUser;
-    String userId = user!.uid;
-    Map<String, dynamic> userData = await _auth.getUserData(userId);
-
-    _firstNameController.text = userData['first_name'];
-    _lastNameController.text = userData['last_name'];
-  }
-
-  void updateProfile() async {
-    setState(() {
-      isLoading = true;
-    });
-    String firstName = _firstNameController.text;
-    String lastName = _lastNameController.text;
-
-    await _auth.updateProfile(firstName, lastName);
-
-    setState(() {
-      isLoading = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        elevation: 0,
-        title: Text("Profile", style: TextStyle(color: Colors.white)),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          elevation: 0,
+          title: Text("Profile", style: TextStyle(color: Colors.white)),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-            ),
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('assets/avatar.png'),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "name:",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "Role: ",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+        body: FutureBuilder(
+            future: userData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return const Center(child: Text('Error fetching data'));
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('User data not found'));
+              }
+              return Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                    ),
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: AssetImage('assets/images/face.png'),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Name: ${snapshot.data!['first_name']} ${snapshot.data!['last_name']}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Role: ${snapshot.data!['role']}",
+                          style: TextStyle(color: Colors.white70, fontSize: 14),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/update-profile');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: Text("Edit Profile",
+                              style: TextStyle(color: Colors.blueAccent)),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Text("Edit Profile",
-                      style: TextStyle(color: Colors.blueAccent)),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.all(20),
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/change-password');
+                          },
+                          child: ProfileOption(
+                            Icons.lock,
+                            "Change Password",
+                            Icons.navigate_next,
+                          ),
+                        ),
+                        Divider(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/change-password');
+                          },
+                          child: ProfileOption(
+                            Icons.handyman_rounded,
+                            "Privacy & Policy",
+                            Icons.navigate_next,
+                          ),
+                        ),
+                        Divider(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/change-password');
+                          },
+                          child: ProfileOption(
+                            Icons.settings,
+                            "Settings",
+                            Icons.navigate_next,
+                          ),
+                        ),
+                        Divider(),
+                        SizedBox(height: 10),
+                        StreamBuilder<QuerySnapshot>(
+                          stream: DataServiceHistoryAttendance()
+                              .getAttendanceStream(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            }
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: _cardCount(
+                                      'Attendance',
+                                      '0',
+                                      Icons.work_history_outlined,
+                                      Colors.green,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                    child: _cardCount(
+                                      'Late',
+                                      '0',
+                                      Icons.access_time,
+                                      Colors.orange,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                    child: _cardCount(
+                                      'Permission',
+                                      '0',
+                                      Icons.event_available,
+                                      Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            // Hitung jumlah masing-masing kategori
+                            int attendanceCount = 0;
+                            int lateCount = 0;
+                            int permissionCount = 0;
+
+                            for (var doc in snapshot.data!.docs) {
+                              String description = doc['description'];
+                              if (description == 'Attendance') {
+                                attendanceCount++;
+                              } else if (description == 'Late') {
+                                lateCount++;
+                              } else if (description == 'Permission') {
+                                permissionCount++;
+                              }
+                            }
+
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: _cardCount(
+                                    'Attendance',
+                                    '$attendanceCount',
+                                    Icons.work_history_outlined,
+                                    Colors.green,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Expanded(
+                                  child: _cardCount(
+                                    'Late',
+                                    '$lateCount',
+                                    Icons.access_time,
+                                    Colors.orange,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Expanded(
+                                  child: _cardCount(
+                                    'Permission',
+                                    '$permissionCount',
+                                    Icons.event_available,
+                                    Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }));
+  }
+
+  Widget _cardCount(String title, String count, IconData icon, Color color) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.white.withOpacity(0.3),
+            child: Icon(icon, color: Colors.white),
           ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(20),
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/change-password');
-                  },
-                  child: ProfileOption(
-                    Icons.lock,
-                    "Change Password",
-                    Icons.navigate_next,
-                  ),
-                ),
-                Divider(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/change-password');
-                  },
-                  child: ProfileOption(
-                    Icons.lock_person_rounded,
-                    "Forgot Password",
-                    Icons.navigate_next,
-                  ),
-                ),
-                Divider(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/change-password');
-                  },
-                  child: ProfileOption(
-                    Icons.settings,
-                    "Settings",
-                    Icons.navigate_next,
-                  ),
-                ),
-              ],
-            ),
+          Text(
+            title,
+            style: TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            count,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -244,13 +323,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget ProfileOption(IconData icon, String title, IconData icon2) {
     return Container(
-        padding: EdgeInsets.all(10),
-        child: Row(children: [
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
           Icon(icon, color: Colors.blueAccent, size: 20),
           SizedBox(width: 10),
           Text(title, style: TextStyle(fontSize: 16)),
           Spacer(),
           Icon(icon2, color: Colors.blueAccent, size: 30),
-        ]));
+        ],
+      ),
+    );
   }
 }
