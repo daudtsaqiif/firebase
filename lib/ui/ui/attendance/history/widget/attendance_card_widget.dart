@@ -12,117 +12,82 @@ class AttendanceCardWidget extends StatelessWidget {
     required this.attendanceId,
   });
 
+  Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'late':
+        return Colors.orange.shade100;
+      case 'sick':
+        return Colors.yellow.shade100;
+      case 'permission':
+        return Colors.blue.shade100;
+      default:
+        return Colors.grey.shade100;
+    }
+  }
+
+  Color getBadgeColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'late':
+        return Colors.orange;
+      case 'sick':
+        return Colors.yellow;
+      case 'permission':
+        return Colors.blue;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 5,
-      margin: EdgeInsets.all(10),
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Row(
-          children: <Widget>[
-            Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                color:
-                    Colors.primaries[Random().nextInt(Colors.primaries.length)],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(
+    return Container(
+      width: 200,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: getStatusColor(data['description']),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            data['name'],
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(Icons.access_time, size: 14),
+              SizedBox(width: 5),
+              Text(data['datetime']),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.location_on, size: 14),
+              SizedBox(width: 5),
+              Expanded(
                 child: Text(
-                  (data['name']?.isNotEmpty ?? false)
-                      ? data['name'][0].toUpperCase()
-                      : '?',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  data['address'],
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: getBadgeColor(data['description']),
+              borderRadius: BorderRadius.circular(5),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "Nama: ",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        data['name'],
-                        style: TextStyle(color: Colors.black, fontSize: 14),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "Attendance Status: ",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        data['description'],
-                        style: TextStyle(color: Colors.black, fontSize: 14),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "Date & time: ",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        data['datetime'],
-                        style: TextStyle(color: Colors.black, fontSize: 14),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "Address: ",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Expanded(
-                        child: Text(
-                          data['address'],
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            child: Text(
+              data['description'],
+              style: TextStyle(color: Colors.white),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

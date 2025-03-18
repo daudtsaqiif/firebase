@@ -65,7 +65,7 @@ class _LeavePageState extends State<LeavePage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leave page'),
+        title: const Text('Permittion page'),
       ),
       body: SingleChildScrollView(
         child: Card(
@@ -92,12 +92,13 @@ class _LeavePageState extends State<LeavePage> {
                       Icon(Icons.home_filled, color: Colors.white),
                       const SizedBox(width: 12),
                       Text(
-                        'Please fill the form below',
-                        style: TextStyle(color: Colors.white),
+                        'Permittion latter',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
@@ -128,7 +129,7 @@ class _LeavePageState extends State<LeavePage> {
                 const Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    'Leave Type',
+                    'Permittion Type',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

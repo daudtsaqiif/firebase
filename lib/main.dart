@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         '/change-password': (context) => ChangePasswordPage(),
         '/home-attendance': (context) => HomeAttendancePage(),
         '/attendance': (context) => AttendancePage(),
-        '/leave': (context) => LeavePage(),
+        '/permittion': (context) => LeavePage(),
         '/history': (context) => HistoryPage(),
       },
     );

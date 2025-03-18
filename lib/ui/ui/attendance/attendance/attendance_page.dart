@@ -256,8 +256,7 @@ class _AttendancePageState extends State<AttendancePage> {
         ),
         title: const Text(
           "Attendance Menu",
-          style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
